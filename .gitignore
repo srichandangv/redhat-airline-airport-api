@@ -105,5 +105,6 @@ dist
 
 #ignore generated js
 out/src/*
+src/**.js
 *.d.ts
 *.js.map
