@@ -33,6 +33,7 @@
     "express": "~4.17.1",
     "faker": "^5.5.3",
     "helmet": "~4.1.0",
+    "infinispan": "~0.7.0",
     "kube-probe": "~0.5.0",
     "luxon": "^1.27.0",
     "morgan": "~1.10.0",
