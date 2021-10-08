@@ -1,5 +1,11 @@
 import airportData from '../../data/airports.json';
 
+// export type Airport1 = {
+//   iata: string
+// }
+// export type AirportList = Ariport[]
+// const airportJson = require('./airports.json') as AirportJSON[]
+
 export class Airport {
   iata: string = '';
   icao: string = '';

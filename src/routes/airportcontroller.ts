@@ -22,27 +22,39 @@ class ScheduleController {
     this.router.get(this.path + '/code', this.getAirport);
   }
 
-  getAirports = (request: express.Request, response: express.Response) => {
-    let airports: Airport[] = new Array<Airport>();
-    airportData.airports.forEach((airportJson) => {
-      let airport: Airport = new Airport();
-      airport = this.getFromCache(airportJson);
-      /*      
-      airport.city = airportJson.city;
-      airport.country = airportJson.country;
-      airport.elevation = airportJson.elevation;
-      airport.iata = airportJson.iata;
-      airport.icao = airportJson.icao;
-      airport.latitude = airportJson.lat;
-      airport.longitude = airportJson.lon;
-      airport.name = airportJson.name;
-      airport.state = airportJson.state;
-      airport.tz = airportJson.tz; */
+  async getAirports(
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ) {
+    // let airports: Airport[] = new Array<Airport>();
+    // airportData.airports.forEach(airportJson => {
+    //   let airport: Airport = new Airport();
+    //   airport = this.getFromCache(airportJson);
+    //   /*
+    //   airport.city = airportJson.city;
+    //   airport.country = airportJson.country;
+    //   airport.elevation = airportJson.elevation;
+    //   airport.iata = airportJson.iata;
+    //   airport.icao = airportJson.icao;
+    //   airport.latitude = airportJson.lat;
+    //   airport.longitude = airportJson.lon;
+    //   airport.name = airportJson.name;
+    //   airport.state = airportJson.state;
+    //   airport.tz = airportJson.tz; */
 
-      airports.push(airport);
-    });
-    response.send(airports);
-  };
+    //   airports.push(airport);
+    // });
+    try {
+      const promises = airportData.airports.map((airportJson) => {
+        return this.getFromCache(airportJson);
+      });
+      let airports = await Promise.all(promises);
+      response.send(airports);
+    } catch (ex) {
+      next(ex);
+    }
+  }
 
   getAirport = (request: express.Request, response: express.Response) => {
     const code = request.params.code.toLowerCase();
@@ -52,30 +64,32 @@ class ScheduleController {
     response.send(airport);
   };
 
-  getFromCache = (airportJson: any): Airport => {
+  async getFromCache(airportJson: any): Promise<Airport> {
     // {"iata":"ATL","icao":"KATL","name":"Hartsfield Jackson Atlanta International Airport","city":"Atlanta","state":"Georgia","country":"US","tz":"America/New_York","elevation":1026,"latitude":33.6366996765,"longitude":-84.4281005859}
     let iata = airportJson.iata;
     let airportObj = Airport.fromJSON(airportJson);
 
     if (iata) {
       log.info(`retreiving airport from cache with ${iata}`);
-      let airport = cache.getAirportInCache(iata);
+      let airport = await cache.getAirportInCache(iata);
 
       if (!airport) {
         log.info(
           'Did not find ${iata} in cache, so now inserting airport: ${airportJson}'
         );
-        try {
-          cache.upsertAirportInCache(airportObj);
-          log.info('Successfully stored in cache for ${iata}');
-        } catch {
-          log.error('Could not update the cache for ${iata}');
-        }
+        await cache.upsertAirportInCache(airportObj);
+
+        // try {
+        //   await cache.upsertAirportInCache(airportObj);
+        //   log.info('Successfully stored in cache for ${iata}');
+        // } catch {
+        //   log.error('Could not update the cache for ${iata}');
+        // }
       }
     }
 
     return airportObj;
-  };
+  }
 }
 
 export default ScheduleController;

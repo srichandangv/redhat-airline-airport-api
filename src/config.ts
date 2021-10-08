@@ -3,7 +3,7 @@
 import { get } from 'env-var';
 
 const config = {
-  CLUSTER_NAME: get('CLUSTER_NAME').required().asString(),
+  CLUSTER_NAME: get('CLUSTER_NAME').default('redairline-infinispan').asString(),
   NODE_ENV: get('NODE_ENV').default('dev').asEnum(['dev', 'prod']),
   LOG_LEVEL: get('LOG_LEVEL').asString(),
 
