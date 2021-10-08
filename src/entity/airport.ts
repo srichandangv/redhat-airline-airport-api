@@ -64,4 +64,33 @@ export class Airport {
       return dist;
     }
   }
+
+  static fromJSON(airportJSON: any): Airport {
+    let airport: Airport = new Airport();
+    airport.city = airportJSON.city;
+    airport.country = airportJSON.country;
+    airport.elevation = airportJSON.elevation;
+    airport.iata = airportJSON.iata;
+    airport.icao = airportJSON.icao;
+    airport.latitude = airportJSON.lat;
+    airport.longitude = airportJSON.lon;
+    airport.name = airportJSON.name;
+    airport.state = airportJSON.state;
+    airport.tz = airportJSON.tz;
+
+    return airport;
+  }
+
+  toJSON() {
+    iata: this.iata;
+    icao: this.icao;
+    name: this.name;
+    city: this.city;
+    state: this.state;
+    country: this.country;
+    tz: this.tz;
+    elevation: this.elevation;
+    latitude: this.latitude;
+    longitude: this.longitude;
+  }
 }
