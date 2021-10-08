@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Airport = void 0;
-const airports_json_1 = __importDefault(require("../../data/airports.json"));
-class Airport {
-    constructor() {
+var airports_json_1 = __importDefault(require("../../data/airports.json"));
+var Airport = (function () {
+    function Airport() {
         this.iata = '';
         this.icao = '';
         this.name = '';
@@ -18,9 +18,9 @@ class Airport {
         this.latitude = 0;
         this.longitude = 0;
     }
-    random() {
-        const randomElement = airports_json_1.default.airports[Math.floor(Math.random() * airports_json_1.default.airports.length)];
-        let airport = new Airport();
+    Airport.prototype.random = function () {
+        var randomElement = airports_json_1.default.airports[Math.floor(Math.random() * airports_json_1.default.airports.length)];
+        var airport = new Airport();
         airport.name = randomElement.name;
         airport.iata = randomElement.iata;
         airport.icao = randomElement.icao;
@@ -32,12 +32,13 @@ class Airport {
         airport.state = randomElement.state;
         airport.tz = randomElement.tz;
         return airport;
-    }
-    distanceBetween(airport, unit = 'K') {
-        let lat1 = this.latitude;
-        let lon1 = this.longitude;
-        let lat2 = airport.latitude;
-        let lon2 = airport.longitude;
+    };
+    Airport.prototype.distanceBetween = function (airport, unit) {
+        if (unit === void 0) { unit = 'K'; }
+        var lat1 = this.latitude;
+        var lon1 = this.longitude;
+        var lat2 = airport.latitude;
+        var lon2 = airport.longitude;
         if (lat1 == lat2 && lon1 == lon2) {
             return 0;
         }
@@ -62,9 +63,9 @@ class Airport {
             }
             return dist;
         }
-    }
-    static fromJSON(airportJSON) {
-        let airport = new Airport();
+    };
+    Airport.fromJSON = function (airportJSON) {
+        var airport = new Airport();
         airport.city = airportJSON.city;
         airport.country = airportJSON.country;
         airport.elevation = airportJSON.elevation;
@@ -76,8 +77,8 @@ class Airport {
         airport.state = airportJSON.state;
         airport.tz = airportJSON.tz;
         return airport;
-    }
-    toJSON() {
+    };
+    Airport.prototype.toJSON = function () {
         iata: this.iata;
         icao: this.icao;
         name: this.name;
@@ -88,7 +89,8 @@ class Airport {
         elevation: this.elevation;
         latitude: this.latitude;
         longitude: this.longitude;
-    }
-}
+    };
+    return Airport;
+}());
 exports.Airport = Airport;
 //# sourceMappingURL=airport.js.map
