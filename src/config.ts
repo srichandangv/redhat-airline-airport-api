@@ -21,7 +21,7 @@ const config = {
     .default('match-instances')
     .asString(),
 */
-    DATAGRID_HOST: get('DATAGRID_HOST').default('infinispan').asString(),
+    DATAGRID_HOST: get('DATAGRID_HOST').default('localhost').asString(),
   DATAGRID_HOTROD_PORT: get('DATAGRID_HOTROD_PORT')
     .default(11222)
     .asPortNumber()
