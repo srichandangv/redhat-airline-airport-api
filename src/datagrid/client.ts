@@ -13,12 +13,24 @@ async function getClient(
   nodes: InfinispanNode[],
   cacheName: string
 ): Promise<InfinispanClient> {
+  log.info('trying to conncet to infinispan');
   const client = await infinispan.client(nodes, {
-    cacheName,
-    // dataFormat: {
-    //   keyType: 'text/plain',
-    //   valueType: 'application/json',
-    // }
+    cacheName: cacheName,
+    version: '2.9',
+    authentication: {
+      enabled: false,
+      saslProperties: {},
+      saslMechanism: 'DIGEST-MD5',
+      userName: 'admin',
+      password: 'password',
+      serverName: 'infinispan',
+      realm: 'default',
+      token: '',
+    },
+    dataFormat: {
+      keyType: 'text/plain',
+      valueType: 'text/plain',
+    },
   });
   log.info(`connected to infinispan for "${cacheName}" cache`);
 

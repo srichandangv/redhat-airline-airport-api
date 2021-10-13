@@ -15,6 +15,7 @@ class ScheduleController {
 
   constructor() {
     this.intializeRoutes();
+    this.getFromCache = this.getFromCache.bind(this);
   }
 
   public intializeRoutes() {
@@ -47,11 +48,15 @@ class ScheduleController {
     // });
     try {
       const promises = airportData.airports.map((airportJson) => {
-        return this.getFromCache(airportJson);
+        log.debug('getAiports calling cache for : ' + airportJson.iata);
+        let sc = new ScheduleController();
+        return sc.getFromCache(airportJson);
       });
       let airports = await Promise.all(promises);
+      log.debug('Retreived aiports successfully: ' + JSON.stringify(airports));
       response.send(airports);
     } catch (ex) {
+      log.error('got error on retreiving promises: ' + ex);
       next(ex);
     }
   }
@@ -67,15 +72,16 @@ class ScheduleController {
   async getFromCache(airportJson: any): Promise<Airport> {
     // {"iata":"ATL","icao":"KATL","name":"Hartsfield Jackson Atlanta International Airport","city":"Atlanta","state":"Georgia","country":"US","tz":"America/New_York","elevation":1026,"latitude":33.6366996765,"longitude":-84.4281005859}
     let iata = airportJson.iata;
-    let airportObj = Airport.fromJSON(airportJson);
+    log.debug('getFromCache start.... for ' + iata);
+    let airportObj = JSON.parse(JSON.stringify(airportJson));
 
     if (iata) {
-      log.info(`retreiving airport from cache with ${iata}`);
       let airport = await cache.getAirportInCache(iata);
+      log.info('Airport cache for ' + iata + ' : ' + JSON.stringify(airport));
 
       if (!airport) {
         log.info(
-          'Did not find ${iata} in cache, so now inserting airport: ${airportJson}'
+          `Did not find ${iata} in cache, so now inserting airport: ${airportJson}`
         );
         await cache.upsertAirportInCache(airportObj);
 

@@ -7,6 +7,16 @@ declare module 'infinispan' {
     export type InfinispanClientOptions = {
       version?: '2.9' | '2.5' | '2.2';
       cacheName?: string;
+      authentication?: {
+        enabled?: boolean;
+        serverName?: string;
+        saslProperties?: {};
+        saslMechanism?: string;
+        userName?: string;
+        password?: string;
+        realm?: string;
+        token?: string;
+      };
       maxRetries?: number;
       ssl?: {
         enabled?: boolean;
@@ -80,7 +90,7 @@ declare module 'infinispan' {
       get(key: string): Promise<string | undefined>;
       put(
         key: string,
-        value: string | Array<unknown> | Record<string, unknown>,
+        value: string | Array<unknown> | Record<string, unknown> | any,
         opts?: StoreOptions
       ): Promise<string | undefined>;
       remove(key: string): Promise<boolean>;

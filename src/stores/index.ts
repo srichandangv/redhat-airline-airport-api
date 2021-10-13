@@ -13,13 +13,14 @@ const getClient = getDataGridClientForCacheNamed(DATAGRID_AIRPORT_DATA_STORE);
 export async function getAirportInCache(
   iata: string
 ): Promise<Airport | undefined> {
-  log.trace(`reading data for airport ${iata}`);
+  log.debug(`getAirportInCache for ${iata}`);
   const client = await getClient;
   const data = await client.get(iata);
+  log.debug(`getAirportInCache, cache data for ${iata}: ` + data);
 
   if (data) {
     try {
-      return Airport.fromJSON(JSON.parse(data));
+      return JSON.parse(data);
     } catch {
       log.warn(
         `found airport data for "${iata}", but failed to parse to JSON: %j`,
@@ -37,8 +38,10 @@ export async function getAirportInCache(
  * @param airport
  */
 export async function upsertAirportInCache(airport: Airport) {
-  const data = airport.toJSON();
+  log.debug(`upsertAirportInCache for ${airport.iata}`);
+  const data = JSON.stringify(airport);
+  log.debug(`with data : ` + data);
   const client = await getClient;
-  log.trace(`writing player to cache: %j`, data);
-  return client.put(airport.iata, JSON.stringify(data));
+
+  return client.put(airport.iata, data);
 }
