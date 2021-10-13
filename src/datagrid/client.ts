@@ -13,7 +13,9 @@ async function getClient(
   nodes: InfinispanNode[],
   cacheName: string
 ): Promise<InfinispanClient> {
-  log.info('trying to connect to infinispan');
+  log.info(
+    `trying to connect to infinispan with host ${DATAGRID_HOST} and port ${DATAGRID_HOTROD_PORT}`
+  );
   const client = await infinispan.client(nodes, {
     cacheName: cacheName,
     version: '2.9',
@@ -32,7 +34,9 @@ async function getClient(
       valueType: 'text/plain',
     },
   });
-  log.info(`connected to infinispan for "${cacheName}" cache`);
+  log.info(
+    `connected to infinispan host ${DATAGRID_HOST} for "${cacheName}" cache`
+  );
 
   const stats = await client.stats();
   log.info(`stats for "${cacheName}":\n`, JSON.stringify(stats, null, 2));
