@@ -29,6 +29,21 @@ async function getClient(
       realm: 'default',
       token: '',
     },
+    ssl: {
+      enabled: false,
+      secureProtocol: '',
+      trustCerts: [],
+      clientAuth: {
+        key: '',
+        passphrase: '',
+        cert: '',
+      },
+      sniHostName: '',
+      cryptoStore: {
+        path: '',
+        passphrase: '',
+      },
+    },
     dataFormat: {
       keyType: 'text/plain',
       valueType: 'text/plain',

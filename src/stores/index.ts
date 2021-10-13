@@ -17,6 +17,7 @@ export async function getAirportInCache(
 
   let data = undefined;
   try {
+    log.debug(`getAirportInCache, getClient for ${iata}`);
     const client = await getClient;
     data = await client.get(iata);
     log.debug(`getAirportInCache, cache data for ${iata}: ` + data);
