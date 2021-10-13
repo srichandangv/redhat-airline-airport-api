@@ -14,9 +14,16 @@ export async function getAirportInCache(
   iata: string
 ): Promise<Airport | undefined> {
   log.debug(`getAirportInCache for ${iata}`);
-  const client = await getClient;
-  const data = await client.get(iata);
-  log.debug(`getAirportInCache, cache data for ${iata}: ` + data);
+
+  let data = undefined;
+  try {
+    const client = await getClient;
+    data = await client.get(iata);
+    log.debug(`getAirportInCache, cache data for ${iata}: ` + data);
+  } catch (ex) {
+    log.error("couldn't get the client:" + ex);
+    return undefined;
+  }
 
   if (data) {
     try {
@@ -41,7 +48,11 @@ export async function upsertAirportInCache(airport: Airport) {
   log.debug(`upsertAirportInCache for ${airport.iata}`);
   const data = JSON.stringify(airport);
   log.debug(`with data : ` + data);
-  const client = await getClient;
 
-  return client.put(airport.iata, data);
+  try {
+    const client = await getClient;
+    return client.put(airport.iata, data);
+  } catch (ex) {
+    log.error("couldn't get the client:" + ex);
+  }
 }

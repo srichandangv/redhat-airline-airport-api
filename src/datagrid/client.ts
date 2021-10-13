@@ -13,7 +13,7 @@ async function getClient(
   nodes: InfinispanNode[],
   cacheName: string
 ): Promise<InfinispanClient> {
-  log.info('trying to conncet to infinispan');
+  log.info('trying to connect to infinispan');
   const client = await infinispan.client(nodes, {
     cacheName: cacheName,
     version: '2.9',
